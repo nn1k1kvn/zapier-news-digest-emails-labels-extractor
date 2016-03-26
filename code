@@ -1,0 +1,57 @@
+import re
+
+
+# (?<!SPONSORED)\n(?!.*putin|.*tramp)(.+)\n<.*?>\n(.+)
+    
+if input['from'] == 'Digg':
+    re_str = r"""
+    (?<!SPONSORED) # remove the sponsored тnews
+    \x0D\x0A                    # \n
+    (?!.*putin|.*trump)         # filter news comprising stopwords in
+    (?P<title>.+)               # section title 
+    \x0D\x0A                    # \n
+    <(?P<url>.*?)>              # URL
+    \x0D\x0A                    # \n
+    (?!.*putin|.*tramp)         # filter news comprising stopwords in
+    (?P<text>.+)                # section description news
+    \x0D\x0A\x0D\x0A\x0D\x0A    # \n\n\n
+    """     
+        
+elif (input['from'] == 'Digg Deeper'):
+    re_str = r"""
+    (?!.*putin|.*trump)         # filter news comprising stopwords in
+    (?P<title>.+)
+    \x0D\x0A
+    (?P<site>.+)
+    \x0D\x0A
+    (?P<via>.+)
+    \x0D\x0A
+    <(?P<url>.*?)>
+    \x0D\x0A\x0D\x0A
+    (?!.*putin|.*trump)         # filter news comprising stopwords in
+    (?P<text>.+)
+    """
+else: 
+    re_str = None
+
+
+p = re.compile(re_str, re.M | re.VERBOSE | re.I )
+#print(re.findall(p,input['body'])
+
+
+iterator = p.finditer(input['body'])
+i=0
+if iterator:
+    for match in iterator:
+        i += 1
+        #print match.group('title')  
+        output['text%s' % i] = match.group('title') + 'r\n'+  match.group('text') 
+        output['url%s' % i] = match.group('url')
+        output['title%s' % i] = match.group('title')
+else:
+    print 'No match'
+
+
+
+
+
