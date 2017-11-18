@@ -1,7 +1,7 @@
 import re
 
 
-# (?<!SPONSORED)\n(?!.*putin|.*tramp)(.+)\n<.*?>\n(.+)
+# (?<!SPONSORED)\n(?!.*text1|.*text2)(.+)\n<.*?>\n(.+)
     
 if input['from'] == 'Digg':
     re_str = r"""
